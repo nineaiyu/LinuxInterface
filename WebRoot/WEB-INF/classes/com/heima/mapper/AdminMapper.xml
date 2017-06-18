@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.mapper.AdminMapper">
+ <resultMap type="admin" id="selectAdminUserMap">
+   <id column="uid" property="uid"/>
+   <result column="uname" property="uname"/>
+   <result column="upass" property="upass"/>
+       
+        
+    </resultMap>
+
+
+    <select id="selectAdminUser" resultMap="selectAdminUserMap">
+      select * from Admin
+    </select>
+    
+    <select id="getAdminPass" resultMap="selectAdminUserMap">
+      select upass from Admin where uname=#{uname}
+    </select>
+
+
+
+<!-- <select id="logins" resultMap="login"> -->
+<!--    select * from user where uname=#{uname} -->
+<!-- </select> -->
+
+
+ </mapper>

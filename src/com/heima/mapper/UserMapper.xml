@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.mapper.UserMapper">
+
+
+       <sql id="userParmeter">
+           user.*,dept.dname
+       </sql>
+       <sql id="selectByCondition">
+          <if test="item!=null">
+              and user.uname like '%${item}%'
+          </if>
+       </sql>
+       <sql id="limit">
+            <if test="startpage!=null and pagesize!=null">
+              limit #{startpage},#{pagesize}
+           </if>
+       </sql>
+
+
+<!--      一对一映射关系,使用resultMap实现-->
+      <resultMap type="user" id="selectUserDeptMap">
+        <id column="uid" property="uid"/>
+        <result column="uname" property="uname"/>
+        <result column="age" property="age"/>
+        <result column="did" property="did"/>
+       <!--association	只需要关联查询的一对一映射
+            javaType     指要映射的对象类型
+            id        对象的唯一标识
+            result   指普通的属性映射
+       -->
+        <association property="dept" javaType="dept">
+           <id column="did" property="did"/>
+           <result column="dname" property="dname"/>
+        </association>
+      </resultMap>
+
+	  <select id="selectUserDeptMap" parameterType="com.heima.vo.UserVo" resultMap="selectUserDeptMap">
+       <!--   select user.*,dept.dname
+	        from user,dept
+	        where user.did=dept.did and user.uname like '%${item}%'
+	        limit #{startpage},#{pagesize}-->
+<!--	       #{value}不会写 -->
+     <!--   动态sql-->
+            select 
+            <include refid="userParmeter"></include>
+ 	        from user,dept
+ 	        <where>
+ 	            user.did=dept.did
+ 	            <include refid="selectByCondition"></include>
+ 	        </where>
+	        <include refid="limit"></include>
+	  </select>
+	  
+	  <select id="getUserByUid" parameterType="int" resultType="user">
+	      select * from user where uid=#{uid}
+	  </select>
+	  
+	  <update id="updateUser" parameterType="user">
+	     update user set uname=#{uname},age=#{age},did=#{did} where uid=#{uid}
+	  </update>
+	  
+	  <insert id="addUser" parameterType="user">
+	     insert into user (uname,age,did) values(#{uname},#{age},#{did})
+	  </insert>
+	  <delete id="delUser" parameterType="int">
+	     delete from user where uid=#{uid}
+	  </delete>
+	  
+	  <select id="getUserCount"  parameterType="string" resultType="int">
+          select count(*) from user  where uname like '%${value}%'
+       </select>
+
+
+
+ </mapper>

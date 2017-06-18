@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.mapper.ServicesMapper">
+ <resultMap type="services" id="selectServicesMap">
+   <id column="uid" property="uid"/>
+   <result column="name" property="name"/>
+   <result column="servicename" property="servicename"/>
+   <result column="ipandport" property="ipandport"/>
+   <result column="account" property="account"/>
+   <result column="password" property="password"/>
+       
+        
+    </resultMap>
+
+
+    <select id="selectServices" resultMap="selectServicesMap">
+      select * from services where name=#{name}
+    </select>
+    
+    <select id="getServices" resultMap="selectServicesMap">
+      select * from services where uid=#{uid}
+    </select>
+    
+    <select id="delServices" resultMap="selectServicesMap">
+      delete from services where uid=#{uid}
+    </select>
+    
+	<update id="updateServices" parameterType="user">
+	   update services set name=#{name},servicename=#{servicename},ipandport=#{ipandport},account=#{account},password=#{password}
+	</update>
+	  
+	<insert id="addServices" parameterType="user">
+	   insert into services (name,servicename,serviceversion,ipandport,account,password) values(#{name},#{servicename},#{serviceversion},#{ipandport},#{account},#{password})
+	</insert>
+
+
+<!-- <select id="logins" resultMap="login"> -->
+<!--    select * from user where uname=#{uname} -->
+<!-- </select> -->
+
+
+ </mapper>

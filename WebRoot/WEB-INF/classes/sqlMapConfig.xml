@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	
+	<typeAliases>
+		<package name="com.heima.pojo"/>
+	</typeAliases>
+	
+<!--	ssm整合后，在beans.xml中配置通过mapper扫描的方式后这里就不用写啦
+
+         在真实的开发中，需要将mapper代理接口与xml文件放置到一个包下，便于扫描 
+		同时，要求，UserMapper.java
+				 UserMapper.xml
+	<mappers>
+		<package name="com.heima.mapper"/>
+	</mappers>
+	-->
+	
+	
+</configuration>

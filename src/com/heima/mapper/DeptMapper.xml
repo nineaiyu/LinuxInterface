@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.mapper.DeptMapper">
+
+ <resultMap type="dept" id="selectDeptUserMap" >
+       <id column="did" property="did"/>
+       <result column="dname" property="dname"/>
+       
+         <!--collection 要映射一对多的集合
+             ofType     集合中保存的类型
+         -->
+       <collection property="user" ofType="user">
+          <id column="uid" property="uid"/>
+          <result column="uname" property="uname"/>
+          <result column="age" property="age"/>
+          <result column="did" property="did"/>
+       </collection>
+    </resultMap>
+<!--     <select id="selectDeptUser" resultMap="selectDeptUserMap">
+      select dept.*,user.uid,user.uname,user.age
+      from dept,user
+      where dept.did=user.did
+    </select> -->
+    <select id="selectDeptUser" resultMap="selectDeptUserMap">
+      select dept.* from dept
+    </select>
+</mapper>

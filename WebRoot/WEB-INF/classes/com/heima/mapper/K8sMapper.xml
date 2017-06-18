@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.mapper.K8sMapper">
+ <resultMap type="k8s" id="selectK8sMap">
+   <id column="uid" property="uid"/>
+   <result column="action" property="action"/>
+   <result column="NamespaceName" property="NamespaceName"/>
+   <result column="appname" property="appname"/>
+   <result column="replicas" property="replicas"/>
+   <result column="hostIP" property="hostIP"/>
+   <result column="hostPort" property="hostPort"/>
+   <result column="hostPath" property="hostPath"/>
+   <result column="containerPath" property="containerPath"/>
+   <result column="containerImage" property="containerImage"/>
+   <result column="cpu" property="cpu"/>
+   <result column="mem" property="mem"/>
+   <result column="containerPort" property="containerPort"/>
+   <result column="deployId" property="deployId"/>
+   <result column="envname" property="envname"/>
+   <result column="envalue" property="envalue"/>  
+    </resultMap>
+
+
+    <select id="selectK8sInfos" resultMap="selectK8sMap">
+      select * from k8s where NamespaceName=#{NamespaceName}
+    </select>
+    
+    <select id="addK8s" resultMap="selectK8sMap">
+    	insert into k8s (action,NamespaceName,appname,replicas,hostIP,hostPort,
+    	hostPath,containerPath,containerImage,cpu,mem,containerPort,deployId,
+    	envname,envalue) values(#{action},#{NamespaceName},#{appname},#{replicas},#{hostIP},#{hostPort},
+    	#{hostPath},#{containerPath},#{containerImage},#{cpu},#{mem},#{containerPort},#{deployId},#{envname},#{envalue})
+    </select>
+<!--     <select id="selectAppName" resultMap="selectK8sMap"> -->
+<!--       select distinct appname from app; -->
+<!--     </select> -->
+    
+<!--     <select id="delApp" resultMap="selectK8sMap"> -->
+<!--       delete from app where uid=#{uid} -->
+<!--     </select> -->
+    
+<!-- 	<update id="updateServices" parameterType="user"> -->
+<!-- 	   update app set name=#{name},servicename=#{servicename},ipandport=#{ipandport},account=#{account},password=#{password} -->
+<!-- 	</update> -->
+	  
+<!-- 	<insert id="addServices" parameterType="user"> -->
+<!-- 	   insert into app (name,servicename,ipandport,account,password) values(#{name},#{servicename},#{ipandport},#{account},#{password}) -->
+<!-- 	</insert> -->
+
+
+<!-- <select id="logins" resultMap="login"> -->
+<!--    select * from user where uname=#{uname} -->
+<!-- </select> -->
+
+
+ </mapper>

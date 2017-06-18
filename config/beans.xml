@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+		
+		<!--	注释，自动扫描-->
+		<context:annotation-config></context:annotation-config>
+		<context:component-scan base-package="com.heima"></context:component-scan>
+		<mvc:annotation-driven></mvc:annotation-driven>
+		<context:property-placeholder location="classpath:jdbc.properties"/>
+		
+		<!--		视图解析器-->
+		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		  <property name="prefix" value="/"></property>
+        <!--    /list.jsp-->
+		  <property name="suffix" value=".jsp"></property>
+		</bean>
+		
+		<!-- 数据源配置 -->
+		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+			destroy-method="close">
+			<property name="driverClassName" value="${jdbc.driverClassName}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+			<property name="maxActive" value="10" />
+			<property name="maxIdle" value="5" />
+		</bean>
+		
+		<!-- 配置 sqlSessionFactory-->
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="dataSource" ref="dataSource"></property>
+			<!-- 加载 sqlMapConfig.xml-->
+			<property name="configLocation" value="classpath:sqlMapConfig.xml"></property>
+		</bean>
+		
+		
+<!--		通过mapper扫描的方式-->
+         <bean  class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+<!--         注意使用sqlSessionFactoryBeanName 和 value-->
+            <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+            <property name="basePackage" value="com.heima.mapper"></property>
+         </bean>
+         
+<!--         配置事务管理器-->
+         <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+           <property name="dataSource" ref="dataSource"></property>
+         </bean>
+         <!--	声明式事务管理-->
+     <tx:advice transaction-manager="transactionManager" id="tx">
+       <tx:attributes>
+           <tx:method name="get*" isolation="DEFAULT" propagation="REQUIRED" read-only="true" /> 
+           <tx:method name="select*" read-only="true" /> 
+           <tx:method name="*" read-only="false" /> 
+       </tx:attributes> 
+     </tx:advice>
+	 <aop:config>
+	   <aop:pointcut expression="execution(* com.heima.service.*.*(..))" id="pointcut"/>
+	   <aop:advisor advice-ref="tx" pointcut-ref="pointcut"/>
+	 </aop:config>
+	 
+	  <mvc:interceptors>
+        <mvc:interceptor>
+        <!--默认拦截的连接-->
+            <mvc:mapping path="/**"/>
+            <!--不拦截的连接-->
+             <mvc:exclude-mapping path="/login.action"/>  
+            
+            <bean class="com.heima.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+</beans>
